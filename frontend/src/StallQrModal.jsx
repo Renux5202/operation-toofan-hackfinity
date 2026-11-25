@@ -1,20 +1,34 @@
-import React from "react";
-import { X, QrCode, Printer, ExternalLink, ShieldCheck, Store, Smartphone } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { X, QrCode, Printer, ExternalLink, ShieldCheck, Store } from "lucide-react";
+import QRCode from "qrcode";
 import { sounds } from "./soundEffects";
 
 export default function StallQrModal({ isOpen = false, onClose = () => {} }) {
-  if (!isOpen) return null;
+  const [bakeryQrDataUrl, setBakeryQrDataUrl] = useState("");
+  const [tipQrDataUrl, setTipQrDataUrl] = useState("");
 
   const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost:5173";
   const bakeryPayUrl = `${origin}/pay?shop=Fort+Road+Bakery&vpa=bakery.demo@upi&amount=35`;
   const campusTipUrl = `${origin}/tip`;
 
-  const bakeryQrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(bakeryPayUrl)}`;
-  const tipQrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(campusTipUrl)}`;
+  useEffect(() => {
+    if (isOpen) {
+      // Generate clean high-res local QR data URLs immediately on modal open (zero external network latency)
+      QRCode.toDataURL(bakeryPayUrl, { width: 220, margin: 1, color: { dark: "#0f172a", light: "#ffffff" } })
+        .then(setBakeryQrDataUrl)
+        .catch(console.error);
+
+      QRCode.toDataURL(campusTipUrl, { width: 220, margin: 1, color: { dark: "#0f172a", light: "#ffffff" } })
+        .then(setTipQrDataUrl)
+        .catch(console.error);
+    }
+  }, [isOpen, bakeryPayUrl, campusTipUrl]);
+
+  if (!isOpen) return null;
 
   const handlePrint = () => {
     try {
-      sounds.click();
+      sounds.playClick();
     } catch {}
     window.print();
   };
@@ -70,16 +84,23 @@ export default function StallQrModal({ isOpen = false, onClose = () => {} }) {
               Scan on your mobile phone to launch the Google Pay simulator pre-filled for ₹35.
             </p>
 
-            <div style={{ background: "#ffffff", padding: "12px", borderRadius: "8px", display: "inline-block", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", border: "1px solid #e2e8f0" }}>
-              <img
-                src={bakeryQrSrc}
-                alt="Fort Road Bakery UPI QR"
-                style={{ width: "160px", height: "160px", display: "block" }}
-              />
+            <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", display: "inline-block", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", border: "1px solid #e2e8f0", minWidth: "160px", minHeight: "160px" }}>
+              {bakeryQrDataUrl ? (
+                <img
+                  src={bakeryQrDataUrl}
+                  alt="Fort Road Bakery UPI QR"
+                  style={{ width: "160px", height: "160px", display: "block" }}
+                />
+              ) : (
+                <div style={{ width: "160px", height: "160px", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: "12px" }}>
+                  Generating QR...
+                </div>
+              )}
             </div>
 
-            <div style={{ marginTop: "12px", fontSize: "10px", color: "#475569", wordBreak: "break-all", background: "#f1f5f9", padding: "6px 8px", borderRadius: "6px" }}>
-              VPA: <b>bakery.demo@upi</b> (Amount: ₹35)
+            <div style={{ marginTop: "12px", fontSize: "11px", color: "#334155", background: "#f1f5f9", padding: "7px 10px", borderRadius: "6px", lineHeight: "1.4" }}>
+              <span>VPA: <b>bakery.demo@upi</b></span>{" "}
+              <span style={{ whiteSpace: "nowrap", color: "#64748b" }}>(Amount: ₹35)</span>
             </div>
             <a
               href={bakeryPayUrl}
@@ -102,16 +123,22 @@ export default function StallQrModal({ isOpen = false, onClose = () => {} }) {
               Judges & students can scan with their phone camera to submit an anonymous cash tip to the radar.
             </p>
 
-            <div style={{ background: "#ffffff", padding: "12px", borderRadius: "8px", display: "inline-block", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", border: "1px solid #e2e8f0" }}>
-              <img
-                src={tipQrSrc}
-                alt="Campus Anonymous Tip QR"
-                style={{ width: "160px", height: "160px", display: "block" }}
-              />
+            <div style={{ background: "#ffffff", padding: "10px", borderRadius: "8px", display: "inline-block", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", border: "1px solid #e2e8f0", minWidth: "160px", minHeight: "160px" }}>
+              {tipQrDataUrl ? (
+                <img
+                  src={tipQrDataUrl}
+                  alt="Campus Anonymous Tip QR"
+                  style={{ width: "160px", height: "160px", display: "block" }}
+                />
+              ) : (
+                <div style={{ width: "160px", height: "160px", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: "12px" }}>
+                  Generating QR...
+                </div>
+              )}
             </div>
 
-            <div style={{ marginTop: "12px", fontSize: "10px", color: "#475569", wordBreak: "break-all", background: "#f1f5f9", padding: "6px 8px", borderRadius: "6px" }}>
-              Route: <b>{campusTipUrl}</b>
+            <div style={{ marginTop: "12px", fontSize: "11px", color: "#334155", background: "#f1f5f9", padding: "7px 10px", borderRadius: "6px", lineHeight: "1.4" }}>
+              <span>Route: <b style={{ wordBreak: "break-all" }}>{campusTipUrl}</b></span>
             </div>
             <a
               href={campusTipUrl}

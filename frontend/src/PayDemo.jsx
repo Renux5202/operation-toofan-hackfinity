@@ -52,12 +52,27 @@ export default function PayDemo({
   onResetTransactions = null,
   onNavigateTab = null,
 }) {
+  // Synchronous URL parameter inspection: Eliminates blank screen hydration flash
+  const urlParams = (() => {
+    if (typeof window !== "undefined") {
+      const p = new URLSearchParams(window.location.search);
+      return {
+        shop: p.get("shop") || "",
+        vpa: p.get("vpa") || "",
+        amount: p.get("amount") || "",
+      };
+    }
+    return { shop: "", vpa: "", amount: "" };
+  })();
+
+  const isPreFilledShop = Boolean(urlParams.shop || urlParams.vpa);
+
   const [activeTab, setActiveTab] = useState("consumer"); // consumer | business
   const [sender, setSender] = useState("STUDENT-014");
-  const [recipient, setRecipient] = useState("bakery.demo@upi");
-  const [recipientName, setRecipientName] = useState("Fort Road Bakery");
-  const [amount, setAmount] = useState("150");
-  const [note, setNote] = useState("Student cash handover to pocket stash");
+  const [recipient, setRecipient] = useState(isPreFilledShop && urlParams.vpa ? urlParams.vpa : "bakery.demo@upi");
+  const [recipientName, setRecipientName] = useState(isPreFilledShop && urlParams.shop ? urlParams.shop : "Fort Road Bakery");
+  const [amount, setAmount] = useState(isPreFilledShop && urlParams.amount ? urlParams.amount : "150");
+  const [note, setNote] = useState(isPreFilledShop ? "Shop counter purchase" : "Student cash handover to pocket stash");
   const [bankAccount, setBankAccount] = useState("sbi");
 
   // Merchant Cash Review state
@@ -66,8 +81,8 @@ export default function PayDemo({
   const [baseline, setBaseline] = useState("200");
   const [observed, setObserved] = useState("900");
 
-  // Modals & Sheets
-  const [showPaySheet, setShowPaySheet] = useState(false);
+  // Modals & Sheets: pre-open payment sheet instantly on first render if launched from printed QR
+  const [showPaySheet, setShowPaySheet] = useState(isPreFilledShop);
   const [showPinModal, setShowPinModal] = useState(false);
   const [pinDigits, setPinDigits] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
@@ -85,21 +100,12 @@ export default function PayDemo({
 
   const canvasRef = useRef(null);
 
-  // Auto-fill from printed QR code URL parameters (e.g. /pay?shop=Fort+Road+Bakery&vpa=bakery.demo@upi&amount=35)
+  // Synchronized payment note update if URL params dynamically change
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const qShop = params.get("shop");
-      const qVpa = params.get("vpa");
-      const qAmount = params.get("amount");
-      if (qShop || qVpa) {
-        if (qShop) setRecipientName(qShop);
-        if (qVpa) setRecipient(qVpa);
-        if (qAmount && !isNaN(Number(qAmount))) setAmount(qAmount);
-        setShowPaySheet(true);
-      }
+    if (isPreFilledShop) {
+      setNote("Shop counter purchase");
     }
-  }, []);
+  }, [isPreFilledShop]);
 
   // Current accumulated stash in PROVIDER-HARSH's pocket from the live transactions
   const { currentPocketStash, studentContributors, totalStudentHandovers, totalCounterDrops } = useMemo(() => {

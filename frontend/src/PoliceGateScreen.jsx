@@ -34,13 +34,42 @@ export default function PoliceGateScreen({
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  // Auto fill credentials and instantly authenticate
+  // Auto fill credentials and instantly authenticate as DANSAF Analyst
   function handleQuickLogin() {
     sounds.playClick();
     setUsername(POLICE_DEFAULT_USER.username);
     setPassword(POLICE_DEFAULT_USER.password);
     setErrorMsg("");
-    executeAuthentication(POLICE_DEFAULT_USER.username, POLICE_DEFAULT_USER.password);
+    executeAuthentication(POLICE_DEFAULT_USER.username, POLICE_DEFAULT_USER.password, "analyst");
+  }
+
+  // 1-Click CWC Counselor Demo Access for judges to inspect minor rehabilitation details
+  function handleQuickCwcLogin() {
+    sounds.playClick();
+    setErrorMsg("");
+    setIsAuthenticating(true);
+    setAuthStepText(lang === "ml" ? "[1/3] CWC & വിമുക്തി കൗൺസിലർ അംഗീകാരം പരിശോധിക്കുന്നു..." : "[1/3] Verifying CWC & Vimukthi Counselor Credentials...");
+
+    setTimeout(() => {
+      setAuthStepText(lang === "ml" ? "[2/3] സെക്ഷൻ 74 ജെ.ജെ. ആക്ട് ഡിക്രിപ്ഷൻ കീ ലഭ്യമാക്കുന്നു..." : "[2/3] Authorizing Section 74 JJ Act minor rehabilitation access...");
+    }, 550);
+
+    setTimeout(() => {
+      setAuthStepText(lang === "ml" ? "[3/3] പ്രവേശനം അനുവദിച്ചു: ഡോ. ലക്ഷ്മി വി. (CWC കൗൺസിലർ)" : "[3/3] Clearance Granted: Dr. Lakshmi V. (CWC Counselor)");
+      setSuccessMsg(t.authSuccess);
+      sounds.playPaySuccess();
+    }, 1100);
+
+    setTimeout(() => {
+      onAuthenticate({
+        username: "cwc_counsellor",
+        role: "counsellor",
+        officerName: lang === "ml" ? "ഡോ. ലക്ഷ്മി വി. (CWC കൗൺസിലർ)" : "Dr. Lakshmi V. (CWC Counselor)",
+        badgeNumber: "CWC-REHAB-04",
+        department: lang === "ml" ? "ചൈൽഡ് വെൽഫെയർ കമ്മിറ്റി & വിമുക്തി ഡി-അഡിക്ഷൻ സെൽ" : "Child Welfare Committee & Vimukthi De-Addiction Cell",
+        signedInAt: new Date().toLocaleTimeString(),
+      });
+    }, 1650);
   }
 
   function handleSubmit(e) {
@@ -48,7 +77,7 @@ export default function PoliceGateScreen({
     executeAuthentication(username, password);
   }
 
-  function executeAuthentication(userVal, passVal) {
+  function executeAuthentication(userVal, passVal, assignedRole = "analyst") {
     const cleanUser = userVal.trim().toLowerCase();
     const cleanPass = passVal.trim();
 
@@ -74,6 +103,7 @@ export default function PoliceGateScreen({
       setTimeout(() => {
         onAuthenticate({
           username: cleanUser,
+          role: assignedRole,
           officerName: lang === "ml" ? POLICE_DEFAULT_USER.officerNameMl : POLICE_DEFAULT_USER.officerName,
           badgeNumber: POLICE_DEFAULT_USER.badgeNumber,
           department: lang === "ml" ? POLICE_DEFAULT_USER.departmentMl : POLICE_DEFAULT_USER.department,
@@ -165,15 +195,34 @@ export default function PoliceGateScreen({
               </div>
             </div>
 
-            <button
-              type="button"
-              className="btn-quick-autofill-gate"
-              onClick={handleQuickLogin}
-              disabled={isAuthenticating}
-            >
-              <Zap size={15} />
-              <span>{lang === "ml" ? "⚡ ഒറ്റ ക്ലിക്കിൽ ലോഗിൻ ചെയ്യുക (1-Click Demo Login)" : "⚡ 1-Click Quick Officer Access (Auto-Login)"}</span>
-            </button>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <button
+                type="button"
+                className="btn-quick-autofill-gate"
+                onClick={handleQuickLogin}
+                disabled={isAuthenticating}
+                title="Login as DANSAF Analyst: Minors masked to STU-TOKEN-XXXX (Sec 74 JJ Act)"
+              >
+                <Zap size={15} />
+                <span>{lang === "ml" ? "⚡ 1-ക്ലിക്ക് ഓഫീസർ ലോഗിൻ (DANSAF Analyst · Masked)" : "⚡ 1-Click Officer Access (DANSAF Analyst · Masked)"}</span>
+              </button>
+
+              <button
+                type="button"
+                className="btn-quick-autofill-gate"
+                onClick={handleQuickCwcLogin}
+                disabled={isAuthenticating}
+                style={{
+                  background: "linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.25) 100%)",
+                  borderColor: "rgba(16, 185, 129, 0.4)",
+                  color: "#34d399",
+                }}
+                title="Login as CWC Counselor: Minor details unmasked for rehabilitation routing"
+              >
+                <ShieldCheck size={15} className="text-emerald-400" />
+                <span>{lang === "ml" ? "🤝 1-ക്ലിക്ക് CWC കൗൺസിലർ ലോഗിൻ (Unmasked Details)" : "🤝 1-Click CWC Counselor Access (Unmasked Details)"}</span>
+              </button>
+            </div>
           </div>
 
           {/* ERROR ALERT */}

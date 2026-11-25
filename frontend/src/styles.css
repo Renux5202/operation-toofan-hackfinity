@@ -9772,17 +9772,28 @@ code, pre, .mono {
 
 /* Unified Single Executive Topbar */
 .official-app-container.pro-theme .official-topbar {
-  height: 54px;
-  background: rgba(13, 19, 34, 0.88);
+  min-height: 54px;
+  height: auto;
+  background: rgba(13, 19, 34, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  padding: 0 20px;
+  padding: 6px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
   flex-shrink: 0;
   z-index: 40;
+}
+
+.official-app-container.pro-theme .topbar-right-zone {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
 }
 
 .topbar-branding-line {

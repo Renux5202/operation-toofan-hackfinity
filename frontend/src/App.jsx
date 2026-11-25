@@ -327,7 +327,7 @@ function OfficialTopologyGraph({ trace, privacy, onSelectNode, selectedNode, act
 
       const groups = [tier0, tier1, tier2, tier3, tier4];
       const pos = new Map();
-      const svgHeight = 310;
+      const svgHeight = 380;
       const tierX = [75, 235, 395, 560, 730];
 
       groups.forEach((group, tIndex) => {
@@ -336,7 +336,7 @@ function OfficialTopologyGraph({ trace, privacy, onSelectNode, selectedNode, act
         group.forEach((node, nIndex) => {
           const y = count === 1
             ? svgHeight / 2
-            : 45 + ((svgHeight - 90) / (count - 1 || 1)) * nIndex;
+            : 42 + ((svgHeight - 110) / (count - 1 || 1)) * nIndex;
           pos.set(node.id, { x, y, tier: tIndex });
         });
       });
@@ -367,7 +367,7 @@ function OfficialTopologyGraph({ trace, privacy, onSelectNode, selectedNode, act
 
     const groups = [tier0, tier1, tier2, tier3];
     const pos = new Map();
-    const svgHeight = 310;
+    const svgHeight = 380;
     const tierX = [85, 295, 525, 745];
 
     groups.forEach((group, tIndex) => {
@@ -376,7 +376,7 @@ function OfficialTopologyGraph({ trace, privacy, onSelectNode, selectedNode, act
       group.forEach((node, nIndex) => {
         const y = count === 1
           ? svgHeight / 2
-          : 45 + ((svgHeight - 90) / (count - 1 || 1)) * nIndex;
+          : 42 + ((svgHeight - 110) / (count - 1 || 1)) * nIndex;
         pos.set(node.id, { x, y, tier: tIndex });
       });
     });
@@ -550,7 +550,7 @@ function OfficialTopologyGraph({ trace, privacy, onSelectNode, selectedNode, act
         ) : (
         <div className="topology-svg-scroll-container">
         <svg
-          viewBox="0 0 830 310"
+          viewBox="0 0 830 380"
           className="topology-svg-element"
           role="img"
           aria-label="Transaction Topology Visualizer"
@@ -643,18 +643,18 @@ function OfficialTopologyGraph({ trace, privacy, onSelectNode, selectedNode, act
           {/* TIER ZONE GLASS PANELS */}
           {hasProvider ? (
             <>
-              <rect x="15" y="10" width="135" height="290" rx="12" fill="url(#tierColStudent)" stroke="rgba(56, 189, 248, 0.18)" strokeWidth="1" />
-              <rect x="170" y="10" width="135" height="290" rx="12" fill="url(#tierColProvider)" stroke="rgba(245, 158, 11, 0.18)" strokeWidth="1" />
-              <rect x="325" y="10" width="145" height="290" rx="12" fill="url(#tierColShop)" stroke="rgba(16, 185, 129, 0.18)" strokeWidth="1" />
-              <rect x="490" y="10" width="145" height="290" rx="12" fill="url(#tierColFakeAcc)" stroke="rgba(239, 68, 68, 0.18)" strokeWidth="1" />
-              <rect x="655" y="10" width="155" height="290" rx="12" fill="url(#tierColHub)" stroke="rgba(139, 92, 246, 0.18)" strokeWidth="1" />
+              <rect x="15" y="10" width="135" height="360" rx="12" fill="url(#tierColStudent)" stroke="rgba(56, 189, 248, 0.18)" strokeWidth="1" />
+              <rect x="170" y="10" width="135" height="360" rx="12" fill="url(#tierColProvider)" stroke="rgba(245, 158, 11, 0.18)" strokeWidth="1" />
+              <rect x="325" y="10" width="145" height="360" rx="12" fill="url(#tierColShop)" stroke="rgba(16, 185, 129, 0.18)" strokeWidth="1" />
+              <rect x="490" y="10" width="145" height="360" rx="12" fill="url(#tierColFakeAcc)" stroke="rgba(239, 68, 68, 0.18)" strokeWidth="1" />
+              <rect x="655" y="10" width="155" height="360" rx="12" fill="url(#tierColHub)" stroke="rgba(139, 92, 246, 0.18)" strokeWidth="1" />
             </>
           ) : (
             <>
-              <rect x="25" y="10" width="165" height="290" rx="14" fill="url(#tierColStudent)" stroke="rgba(56, 189, 248, 0.18)" strokeWidth="1" />
-              <rect x="235" y="10" width="165" height="290" rx="14" fill="url(#tierColShop)" stroke="rgba(16, 185, 129, 0.18)" strokeWidth="1" />
-              <rect x="445" y="10" width="165" height="290" rx="14" fill="url(#tierColFakeAcc)" stroke="rgba(239, 68, 68, 0.18)" strokeWidth="1" />
-              <rect x="655" y="10" width="150" height="290" rx="14" fill="url(#tierColHub)" stroke="rgba(139, 92, 246, 0.18)" strokeWidth="1" />
+              <rect x="25" y="10" width="165" height="360" rx="14" fill="url(#tierColStudent)" stroke="rgba(56, 189, 248, 0.18)" strokeWidth="1" />
+              <rect x="235" y="10" width="165" height="360" rx="14" fill="url(#tierColShop)" stroke="rgba(16, 185, 129, 0.18)" strokeWidth="1" />
+              <rect x="445" y="10" width="165" height="360" rx="14" fill="url(#tierColFakeAcc)" stroke="rgba(239, 68, 68, 0.18)" strokeWidth="1" />
+              <rect x="655" y="10" width="150" height="360" rx="14" fill="url(#tierColHub)" stroke="rgba(139, 92, 246, 0.18)" strokeWidth="1" />
             </>
           )}
 
@@ -832,15 +832,15 @@ function OfficialTopologyGraph({ trace, privacy, onSelectNode, selectedNode, act
                 {/* Backdrop pill for label */}
                 <rect
                   x={pos.x - 42}
-                  y={pos.y + 30}
+                  y={pos.y + 27}
                   width="84"
-                  height="16"
+                  height="15"
                   rx="4"
-                  fill="rgba(255, 255, 255, 0.88)"
+                  fill="rgba(255, 255, 255, 0.94)"
                   stroke="#e2e8f0"
                   strokeWidth="0.8"
                 />
-                <text x={pos.x} y={pos.y + 42} textAnchor="middle" className="node-caption-text">
+                <text x={pos.x} y={pos.y + 38} textAnchor="middle" className="node-caption-text">
                   {label.length > 15 ? `${label.slice(0, 13)}…` : label}
                 </text>
 
@@ -877,16 +877,16 @@ function OfficialTopologyGraph({ trace, privacy, onSelectNode, selectedNode, act
                     <>
                       <rect
                         x={pos.x - pillWidth / 2}
-                        y={pos.y + 49}
+                        y={pos.y + 44}
                         width={pillWidth}
-                        height="15"
+                        height="14"
                         rx="4"
                         fill={style.badgeBg || "#f1f5f9"}
                         stroke={style.stroke}
                         strokeWidth="0.6"
                         strokeOpacity="0.4"
                       />
-                      <text x={pos.x} y={pos.y + 60} textAnchor="middle" className="node-stats-text" fill={style.textFill}>
+                      <text x={pos.x} y={pos.y + 54} textAnchor="middle" className="node-stats-text" fill={style.textFill}>
                         {badgeText}
                       </text>
                     </>
@@ -944,7 +944,7 @@ function OfficialEvidenceWizard() {
     sec50_magistrate_option: true,
     sec52a_magistrate_inventory: true,
     sec105_bnss_videography: true,
-    sec100_bnss_witness: true,
+    sec103_bnss_witness: true,
   });
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
@@ -1216,8 +1216,16 @@ function OfficialEvidenceWizard() {
     );
   }
 
-  const checklistScore = Object.values(checklist).filter(Boolean).length;
-  const checklistPercent = Math.round((checklistScore / 6) * 100);
+  const CHECKLIST_STATUTORY_KEYS = [
+    "sec42_written_grounds",
+    "sec42_dispatch_72h",
+    "sec50_magistrate_option",
+    "sec52a_magistrate_inventory",
+    "sec105_bnss_videography",
+    "sec103_bnss_witness",
+  ];
+  const checklistScore = CHECKLIST_STATUTORY_KEYS.filter((k) => !!checklist[k]).length;
+  const checklistPercent = Math.round((checklistScore / CHECKLIST_STATUTORY_KEYS.length) * 100);
 
   async function handleSaveAndExport() {
     if (!digest) {
@@ -1453,7 +1461,7 @@ function OfficialEvidenceWizard() {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   <Video size={16} className="text-blue-600" />
-                  <b style={{ fontSize: "13px" }}>Section 105 BNSS Mandated Seizure Video</b>
+                  <b style={{ fontSize: "13px", color: "#0f172a" }}>Section 105 BNSS Mandated Seizure Video</b>
                 </div>
                 <span className="demo-rule-badge" style={{ fontSize: "10px", background: "#dbeafe", color: "#1e40af", borderColor: "#bfdbfe" }}>
                   MANDATORY VIDEOGRAPHY

@@ -200,32 +200,32 @@ export default function BusinessAuditorModal({
           {/* INPUT FORM GRID */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
             <div>
-              <label style={{ fontSize: "11px", fontWeight: "700", color: "#475569", display: "block", marginBottom: "4px" }}>
+              <label style={{ fontSize: "11px", fontWeight: "700", color: "#e2e8f0", display: "block", marginBottom: "4px" }}>
                 Suspect Shop / Establishment
               </label>
               <input
                 type="text"
                 value={merchantAlias}
                 onChange={(e) => setMerchantAlias(e.target.value.toUpperCase())}
-                style={{ width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px", fontWeight: "700" }}
+                style={{ width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px", fontWeight: "700", backgroundColor: "#ffffff", color: "#0f172a" }}
               />
             </div>
             <div>
-              <label style={{ fontSize: "11px", fontWeight: "700", color: "#475569", display: "block", marginBottom: "4px" }}>
+              <label style={{ fontSize: "11px", fontWeight: "700", color: "#e2e8f0", display: "block", marginBottom: "4px" }}>
                 Category / Trade Type
               </label>
               <input
                 type="text"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                style={{ width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "12px" }}
+                style={{ width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "12px", backgroundColor: "#ffffff", color: "#0f172a" }}
               />
             </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", marginBottom: "16px" }}>
             <div>
-              <label style={{ fontSize: "11px", fontWeight: "700", color: "#475569", display: "block", marginBottom: "4px" }}>
+              <label style={{ fontSize: "11px", fontWeight: "700", color: "#e2e8f0", display: "block", marginBottom: "4px" }}>
                 Wholesale Purchases (₹)
               </label>
               <input
@@ -233,12 +233,12 @@ export default function BusinessAuditorModal({
                 value={wholesaleStock}
                 onChange={(e) => setWholesaleStock(e.target.value)}
                 placeholder="20000"
-                style={{ width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px", fontWeight: "600" }}
+                style={{ width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px", fontWeight: "600", backgroundColor: "#ffffff", color: "#0f172a" }}
               />
-              <small style={{ fontSize: "10px", color: "#64748b" }}>Verified stock purchase bills</small>
+              <small style={{ fontSize: "10px", color: "#94a3b8" }}>Verified stock purchase bills</small>
             </div>
             <div>
-              <label style={{ fontSize: "11px", fontWeight: "700", color: "#475569", display: "block", marginBottom: "4px" }}>
+              <label style={{ fontSize: "11px", fontWeight: "700", color: "#e2e8f0", display: "block", marginBottom: "4px" }}>
                 Total Bank Deposits (₹)
               </label>
               <input
@@ -246,12 +246,12 @@ export default function BusinessAuditorModal({
                 value={bankDeposits}
                 onChange={(e) => setBankDeposits(e.target.value)}
                 placeholder="240000"
-                style={{ width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px", fontWeight: "700", color: "#b91c1c" }}
+                style={{ width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px", fontWeight: "700", color: "#b91c1c", backgroundColor: "#ffffff" }}
               />
-              <small style={{ fontSize: "10px", color: "#64748b" }}>Cash + UPI bank receipts</small>
+              <small style={{ fontSize: "10px", color: "#94a3b8" }}>Cash + UPI bank receipts</small>
             </div>
             <div>
-              <label style={{ fontSize: "11px", fontWeight: "700", color: "#475569", display: "block", marginBottom: "4px" }}>
+              <label style={{ fontSize: "11px", fontWeight: "700", color: "#e2e8f0", display: "block", marginBottom: "4px" }}>
                 Standard Gross Margin (%)
               </label>
               <input
@@ -259,9 +259,9 @@ export default function BusinessAuditorModal({
                 value={marginPct}
                 onChange={(e) => setMarginPct(e.target.value)}
                 placeholder="30"
-                style={{ width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px" }}
+                style={{ width: "100%", padding: "7px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px", backgroundColor: "#ffffff", color: "#0f172a" }}
               />
-              <small style={{ fontSize: "10px", color: "#64748b" }}>Standard retail markup</small>
+              <small style={{ fontSize: "10px", color: "#94a3b8" }}>Standard retail markup</small>
             </div>
           </div>
 
@@ -279,25 +279,25 @@ export default function BusinessAuditorModal({
             {multiShopMode && (
               <div style={{ marginTop: "10px", paddingTop: "10px", borderTop: "1px dashed #cbd5e1", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                 <div>
-                  <label style={{ fontSize: "11px", fontWeight: "600", color: "#64748b", display: "block", marginBottom: "3px" }}>
+                  <label style={{ fontSize: "11px", fontWeight: "600", color: "#cbd5e1", display: "block", marginBottom: "3px" }}>
                     Sister Outlet 2 Wholesale Bills (₹)
                   </label>
                   <input
                     type="number"
                     value={sisterStock}
                     onChange={(e) => setSisterStock(e.target.value)}
-                    style={{ width: "100%", padding: "6px 9px", borderRadius: "5px", border: "1px solid #cbd5e1", fontSize: "12px" }}
+                    style={{ width: "100%", padding: "6px 9px", borderRadius: "5px", border: "1px solid #cbd5e1", fontSize: "12px", backgroundColor: "#ffffff", color: "#0f172a" }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: "11px", fontWeight: "600", color: "#64748b", display: "block", marginBottom: "3px" }}>
+                  <label style={{ fontSize: "11px", fontWeight: "600", color: "#cbd5e1", display: "block", marginBottom: "3px" }}>
                     Sister Outlet 2 Bank Deposits (₹)
                   </label>
                   <input
                     type="number"
                     value={sisterDeposits}
                     onChange={(e) => setSisterDeposits(e.target.value)}
-                    style={{ width: "100%", padding: "6px 9px", borderRadius: "5px", border: "1px solid #cbd5e1", fontSize: "12px", color: "#b91c1c", fontWeight: "700" }}
+                    style={{ width: "100%", padding: "6px 9px", borderRadius: "5px", border: "1px solid #cbd5e1", fontSize: "12px", color: "#b91c1c", fontWeight: "700", backgroundColor: "#ffffff" }}
                   />
                 </div>
                 <div style={{ gridColumn: "1 / -1", fontSize: "11px", color: "#475569" }}>
