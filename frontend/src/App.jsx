@@ -2315,16 +2315,7 @@ export default function App() {
     setSimulating(false);
     setSelectedNode(null);
 
-    // If switching to Cash Stash and transactions don't have the provider trail, load the full cash flow
-    if (modeKey === "cashLaundering" && !transactions.some((t) => t.sender?.includes("PROVIDER") || t.receiver?.includes("PROVIDER"))) {
-      handleLoadSampleData("cashLaundering");
-    } else if (modeKey === "cdmLoop" && !transactions.some((t) => t.channel === "cdm" || t.sender?.includes("CDM"))) {
-      handleLoadSampleData("cdmLoop");
-    } else if (modeKey === "dealer" && !transactions.some((t) => t.receiver === "SUPPLIER-MULE-9X" || t.sender === "DEALER-01")) {
-      handleLoadSampleData("dealer");
-    }
-
-    setTimeout(() => setIsAnalyzing(false), 550);
+    setTimeout(() => setIsAnalyzing(false), 300);
   }
 
   async function handleLoadSampleData(sKey = "burst") {
@@ -2436,6 +2427,15 @@ export default function App() {
         (t.receiver === "MAIN-CASHOUT-HUB" && (Number(t.amount) || 0) >= 1500)
       );
     }
+    if (viewMode === "dealer") {
+      return transactions.filter((t) =>
+        t.sender?.includes("DEALER") ||
+        t.receiver?.includes("DEALER") ||
+        t.sender === "SUPPLIER-MULE-9X" ||
+        t.receiver === "SUPPLIER-MULE-9X" ||
+        t.receiver === "MAIN-BOSS-HUB"
+      );
+    }
     return transactions;
   }, [transactions, viewMode]);
 
@@ -2489,6 +2489,18 @@ export default function App() {
       activeEdges.forEach((e) => { nodeIds.add(e.source); nodeIds.add(e.target); });
       activeNodes = (trace.nodes || []).filter((n) => nodeIds.has(n.id));
       activePaths = (trace.paths || []).filter((p) => p.some((id) => id.includes("PROVIDER")));
+    } else if (viewMode === "dealer") {
+      activeEdges = (trace.edges || []).filter((e) =>
+        e.source?.includes("DEALER") ||
+        e.target?.includes("DEALER") ||
+        e.source === "SUPPLIER-MULE-9X" ||
+        e.target === "SUPPLIER-MULE-9X" ||
+        e.target === "MAIN-BOSS-HUB"
+      );
+      const nodeIds = new Set();
+      activeEdges.forEach((e) => { nodeIds.add(e.source); nodeIds.add(e.target); });
+      activeNodes = (trace.nodes || []).filter((n) => nodeIds.has(n.id));
+      activePaths = (trace.paths || []).filter((p) => p.some((id) => id.includes("DEALER") || id.includes("SUPPLIER")));
     }
 
     // Accurately compute exact money received & sent for each node from the active edges
