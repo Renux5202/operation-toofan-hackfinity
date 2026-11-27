@@ -17,6 +17,7 @@ import Section94NoticeModal from "./Section94NoticeModal.jsx";
 import BusinessAuditorModal from "./BusinessAuditorModal.jsx";
 import StudentIntakeHotspotPanel from "./StudentIntakeHotspotPanel.jsx";
 import StallQrModal from "./StallQrModal.jsx";
+import BankTextImporterModal from "./BankTextImporterModal.jsx";
 import { syncClient } from "./syncClient";
 import { translations, POLICE_DEFAULT_USER } from "./i18n.js";
 
@@ -1766,7 +1767,7 @@ function OfficialEvidenceWizard() {
 // ----------------------------------------------------
 // SIMPLIFIED TRANSACTION FORENSICS LEDGER
 // ----------------------------------------------------
-function OfficialTransactionLedger({ transactions, privacy, onReset, onLoadDemo, onOpenSec94, onUploadCSV }) {
+function OfficialTransactionLedger({ transactions, privacy, onReset, onLoadDemo, onOpenSec94, onUploadCSV, onOpenImporter }) {
   const [filterQuery, setFilterQuery] = useState("");
   const [channelFilter, setChannelFilter] = useState("all");
   const fileInputRef = useRef(null);
@@ -1929,6 +1930,16 @@ function OfficialTransactionLedger({ transactions, privacy, onReset, onLoadDemo,
             <Upload size={14} />
             <span>Upload Bank CSV</span>
           </button>
+          {onOpenImporter && (
+            <button
+              className="btn-export-file primary-highlight"
+              onClick={() => { sounds.playClick(); onOpenImporter(); }}
+              title="Insert Bank Statement Text, Raw SMS Logs, or Upload File (.txt, .csv)"
+            >
+              <FileText size={14} />
+              <span>Insert Bank Text / File</span>
+            </button>
+          )}
           <button className="btn-export-file" onClick={exportCSV} title="Export CSV File">
             <FileSpreadsheet size={14} />
             <span>Export CSV</span>
@@ -2057,6 +2068,7 @@ export default function App() {
   const [sec94Target, setSec94Target] = useState(null);
   const [showAuditorModal, setShowAuditorModal] = useState(false);
   const [showStallQrModal, setShowStallQrModal] = useState(false);
+  const [showBankImporterModal, setShowBankImporterModal] = useState(false);
   const [soundMuted, setSoundMuted] = useState(() => sounds.muted);
 
   function handleToggleSound() {
@@ -2229,6 +2241,26 @@ export default function App() {
     window.dispatchEvent(new CustomEvent("toofan-tx-update", { detail: payload }));
     try {
       await syncClient.sendTransactions(parsedTransactions);
+    } catch {}
+    await broadcast(combined, DEFAULT_MERCHANT_OBS);
+    setTimeout(() => setIsAnalyzing(false), 500);
+  }
+
+  async function handleImportTransactions(newTransactions, mode = "append") {
+    sounds.playAlert();
+    setIsAnalyzing(true);
+    const combined = mode === "replace" ? newTransactions : [...transactions, ...newTransactions];
+    setTransactions(combined);
+    const payload = {
+      createdAt: new Date().toISOString(),
+      transactions: combined,
+      merchantObservations: DEFAULT_MERCHANT_OBS,
+      isReset: false,
+    };
+    localStorage.setItem(BRIDGE_KEY, JSON.stringify(payload));
+    window.dispatchEvent(new CustomEvent("toofan-tx-update", { detail: payload }));
+    try {
+      await syncClient.sendTransactions(newTransactions);
     } catch {}
     await broadcast(combined, DEFAULT_MERCHANT_OBS);
     setTimeout(() => setIsAnalyzing(false), 500);
@@ -3029,6 +3061,16 @@ export default function App() {
                 <span>Stock Audit</span>
               </button>
 
+              {/* INSERT BANK TEXT / FILE BUTTON */}
+              <button
+                className="btn-topbar-tool"
+                onClick={() => { sounds.playClick(); setShowBankImporterModal(true); }}
+                title={t.insertBankTextHint || "Insert Bank Statement Text, Raw SMS Logs, or Upload File (Sec 94 BNSS)"}
+              >
+                <FileText size={13} />
+                <span>{t.insertBankText || "Insert Bank Text"}</span>
+              </button>
+
               {/* STALL QR CODES BUTTON */}
               <button
                 className="btn-topbar-tool"
@@ -3164,6 +3206,14 @@ export default function App() {
                     >
                       {simulating ? <Pause size={13} /> : <Play size={13} />}
                       <span>{simulating ? "Pause" : "Play Trail"}</span>
+                    </button>
+                    <button
+                      className="action-pill-btn"
+                      onClick={() => { sounds.playClick(); setShowBankImporterModal(true); }}
+                      title="Insert Bank Statement Text or Upload File (.txt, .csv, SMS)"
+                    >
+                      <FileText size={13} />
+                      <span>Insert Bank Text</span>
                     </button>
                     <button
                       className="action-pill-btn"
@@ -3618,6 +3668,7 @@ export default function App() {
                   onLoadDemo={() => handleLoadSampleData(viewMode === "all" ? "burst" : viewMode)}
                   onOpenSec94={handleOpenSec94}
                   onUploadCSV={handleCsvUpload}
+                  onOpenImporter={() => setShowBankImporterModal(true)}
                 />
               </div>
             )}
@@ -3644,6 +3695,14 @@ export default function App() {
       <StallQrModal
         isOpen={showStallQrModal}
         onClose={() => setShowStallQrModal(false)}
+      />
+
+      {/* BANK STATEMENT & RAW TEXT IMPORTER MODAL (SEC 94 BNSS) */}
+      <BankTextImporterModal
+        isOpen={showBankImporterModal}
+        onClose={() => setShowBankImporterModal(false)}
+        onImportTransactions={handleImportTransactions}
+        lang={lang}
       />
 
       {/* KERALA POLICE AUTHENTICATION MODAL */}

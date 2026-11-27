@@ -108,6 +108,8 @@ export const translations = {
     muteSound: "Mute Sound",
     unmuteSound: "Unmute Sound",
     whyFlagged: "Forensic Risk Score Breakdown",
+    insertBankText: "Insert Bank Text / File",
+    insertBankTextHint: "Parse raw text, bank SMS logs, or upload files directly into investigation",
 
     // Language toggle
     langToggle: "മലയാളം",
@@ -219,6 +221,8 @@ export const translations = {
     muteSound: "ശബ്ദം നിശബ്ദമാക്കുക",
     unmuteSound: "ശബ്ദം ഓൺ ചെയ്യുക",
     whyFlagged: "ഫോറൻസിക് റിസ്ക് സ്കോറും കാരണങ്ങളും",
+    insertBankText: "ബാങ്ക് വിവരങ്ങൾ നൽകുക (Text/File)",
+    insertBankTextHint: "ടെക്സ്റ്റ്, എസ്.എം.എസ്, അല്ലെങ്കിൽ ഫയൽ നൽകി നേരിട്ട് ഭൂപടത്തിലേക്ക് ചേർക്കുക",
 
     // Language toggle
     langToggle: "English",

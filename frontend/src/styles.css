@@ -3739,6 +3739,18 @@ button, input, select {
   background: #f8fafc;
 }
 
+.btn-export-file.primary-highlight {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0369a1;
+  font-weight: 700;
+}
+
+.btn-export-file.primary-highlight:hover {
+  background: #0369a1;
+  color: #ffffff;
+}
+
 .account-alias-pill {
   font-weight: 600;
   padding: 2px 7px;

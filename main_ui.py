@@ -33,15 +33,21 @@ if NODE_PORTABLE_DIR.exists() and str(NODE_PORTABLE_DIR) not in os.environ.get("
 
 BACKEND_HOST = "127.0.0.1"
 BACKEND_PORT = 8000
-FRONTEND_HOST = "127.0.0.1"
+FRONTEND_HOST = "localhost"
 FRONTEND_PORT = 5173
 
 processes = []
 
 def is_port_in_use(port: int, host: str = "127.0.0.1") -> bool:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.settimeout(0.5)
-        return s.connect_ex((host, port)) == 0
+    for family, addr in [(socket.AF_INET, "127.0.0.1"), (socket.AF_INET6, "::1")]:
+        try:
+            with socket.socket(family, socket.SOCK_STREAM) as s:
+                s.settimeout(0.5)
+                if s.connect_ex((addr, port)) == 0:
+                    return True
+        except Exception:
+            pass
+    return False
 
 def wait_for_port(port: int, timeout: float = 15.0, host: str = "127.0.0.1") -> bool:
     start = time.time()
@@ -83,8 +89,20 @@ def main():
 """)
 
     # 1. Start Backend (FastAPI via Uvicorn)
-    if is_port_in_use(BACKEND_PORT, BACKEND_HOST):
-        print(f"[OK] Backend already listening on port {BACKEND_PORT}")
+    if is_port_in_use(BACKEND_PORT):
+        is_toofan = False
+        try:
+            import urllib.request
+            with urllib.request.urlopen(f"http://127.0.0.1:{BACKEND_PORT}/docs", timeout=1.0) as resp:
+                is_toofan = "TOOFAN" in resp.read().decode("utf-8", errors="ignore")
+        except Exception:
+            pass
+
+        if is_toofan:
+            print(f"[OK] TOOFAN Backend already listening on port {BACKEND_PORT}")
+        else:
+            print(f"[!] Warning: Port {BACKEND_PORT} is currently in use by another application.")
+            print(f"    (If another project like MindBridge is running, stop it to use TOOFAN backend).")
     else:
         print(f"[*] Starting FastAPI backend on http://{BACKEND_HOST}:{BACKEND_PORT}...")
         backend_cmd = [
